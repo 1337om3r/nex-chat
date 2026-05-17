@@ -2,6 +2,9 @@
 
 ![NexChat Mockup](nexchat.png)
 
+Canlı Sunucu
+https://nex-chat-4gqo.onrender.com/
+
 NexChat, **WebSocket tabanlı gerçek zamanlı bir sohbet uygulamasıdır**.  
 Node.js ve WebSocket (`ws` paketi) kullanılarak geliştirilmiştir.  
 
