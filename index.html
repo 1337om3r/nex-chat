@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NexChat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600&family=Nunito:wght@400;600;700&family=Raleway:wght@400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* ═══════════════════════════════════════
+   THEMES
+═══════════════════════════════════════ */
+:root, [data-theme="cyber"] {
+  --bg0: #0d0f14;
+  --bg1: #13161e;
+  --bg2: #1a1e28;
+  --surface: #1e2330;
+  --surface2: #252b3b;
+  --border: #2e354a;
+  --accent: #5de8c1;
+  --accent2: #3cc9a3;
+  --accent-glow: rgba(93,232,193,0.12);
+  --red: #ff5e7a;
+  --amber: #f5c842;
+  --text1: #e8ecf5;
+  --text2: #8a91a8;
+  --text3: #505669;
+  --msg-me-bg: rgba(93,232,193,0.13);
+  --msg-me-border: rgba(93,232,193,0.22);
+  --r: 8px;
+  --rl: 14px;
+  --font: 'Syne', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --font-size: 14px;
+}
+[data-theme="midnight"] {
+  --bg0: #080c18;
+  --bg1: #0e1525;
+  --bg2: #141d32;
+  --surface: #182038;
+  --surface2: #1e2840;
+  --border: #263050;
+  --accent: #7b8cff;
+  --accent2: #5a6de8;
+  --accent-glow: rgba(123,140,255,0.12);
+  --red: #ff6b8a;
+  --amber: #ffd166;
+  --text1: #e0e8ff;
+  --text2: #7a85aa;
+  --text3: #424a66;
+  --msg-me-bg: rgba(123,140,255,0.13);
+  --msg-me-border: rgba(123,140,255,0.22);
+}
+[data-theme="rose"] {
+  --bg0: #140a12;
+  --bg1: #1e1020;
+  --bg2: #2a162c;
+  --surface: #301a38;
+  --surface2: #3a2044;
+  --border: #4a2855;
+  --accent: #f472b6;
+  --accent2: #db5fa0;
+  --accent-glow: rgba(244,114,182,0.12);
+  --red: #ff6b6b;
+  --amber: #ffd166;
+  --text1: #ffe0f5;
+  --text2: #aa7a9a;
+  --text3: #664460;
+  --msg-me-bg: rgba(244,114,182,0.13);
+  --msg-me-border: rgba(244,114,182,0.22);
+}
+[data-theme="amber"] {
+  --bg0: #100d00;
+  --bg1: #1a1500;
+  --bg2: #231c00;
+  --surface: #2c2200;
+  --surface2: #352a00;
+  --border: #4a3a00;
+  --accent: #f5c842;
+  --accent2: #d4a820;
+  --accent-glow: rgba(245,200,66,0.12);
+  --red: #ff6b6b;
+  --amber: #ff9f43;
+  --text1: #fff5cc;
+  --text2: #aa9555;
+  --text3: #665a22;
+  --msg-me-bg: rgba(245,200,66,0.13);
+  --msg-me-border: rgba(245,200,66,0.22);
+}
+[data-theme="light"] {
+  --bg0: #f0f2f8;
+  --bg1: #ffffff;
+  --bg2: #f5f7fc;
+  --surface: #edf0f8;
+  --surface2: #e4e8f4;
+  --border: #d0d6e8;
+  --accent: #5a4fcf;
+  --accent2: #4840b8;
+  --accent-glow: rgba(90,79,207,0.08);
+  --red: #e53e5f;
+  --amber: #d4920a;
+  --text1: #1a1e30;
+  --text2: #5a627a;
+  --text3: #9099b8;
+  --msg-me-bg: rgba(90,79,207,0.08);
+  --msg-me-border: rgba(90,79,207,0.18);
+}
+[data-theme="forest"] {
+  --bg0: #060e09;
+  --bg1: #0b1610;
+  --bg2: #101f17;
+  --surface: #14271c;
+  --surface2: #192e22;
+  --border: #243d2e;
+  --accent: #4ade80;
+  --accent2: #32c468;
+  --accent-glow: rgba(74,222,128,0.12);
+  --red: #ff6b6b;
+  --amber: #ffd166;
+  --text1: #d8f5e0;
+  --text2: #6a9a78;
+  --text3: #3a5a44;
+  --msg-me-bg: rgba(74,222,128,0.13);
+  --msg-me-border: rgba(74,222,128,0.22);
+}
+
+/* ═══════════════════════════════════════
+   RESET / BASE
+═══════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; background: var(--bg0); transition: background 0.3s, color 0.3s; }
+body { font-family: var(--font); font-size: var(--font-size); color: var(--text1); display: flex; height: 100vh; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ═══════════════════════════════════════
+   MODAL / OVERLAY
+═══════════════════════════════════════ */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(8px);
+}
+.overlay.hide { display: none; }
+.modal {
+  background: var(--bg1);
+  border: 1px solid var(--border);
+  border-radius: var(--rl);
+  padding: 32px 28px;
+  width: 340px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  animation: modalIn 0.2s ease;
+}
+@keyframes modalIn { from { opacity:0; transform:translateY(12px) scale(0.97); } to { opacity:1; transform:none; } }
+.modal-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.logo-mark {
+  width: 40px; height: 40px; border-radius: 12px;
+  background: var(--accent); display: flex; align-items: center; justify-content: center;
+  color: var(--bg0); font-size: 20px; font-weight: 700;
+}
+.modal h2 { font-size: 22px; font-weight: 700; color: var(--text1); }
+.modal p { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
+.modal input {
+  width: 100%;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 11px 14px;
+  font-family: var(--font); font-size: 14px; color: var(--text1);
+  outline: none; margin-bottom: 8px; transition: border-color 0.15s;
+}
+.modal input:focus { border-color: var(--accent); }
+.modal input::placeholder { color: var(--text3); }
+.modal-err { font-size: 12px; color: var(--red); min-height: 18px; margin-bottom: 10px; }
+.modal-btn {
+  width: 100%; padding: 12px; background: var(--accent);
+  border: none; cursor: pointer; border-radius: var(--r);
+  font-family: var(--font); font-size: 15px; font-weight: 700;
+  color: var(--bg0); transition: background 0.12s, transform 0.1s; letter-spacing: 0.02em;
+}
+.modal-btn:hover { background: var(--accent2); }
+.modal-btn:active { transform: scale(0.97); }
+.modal-conn { font-size: 12px; color: var(--text3); text-align: center; margin-top: 14px; }
+.dot-pulse { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 1.2s infinite; vertical-align: middle; }
+@keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+/* ═══════════════════════════════════════
+   SETTINGS OVERLAY
+═══════════════════════════════════════ */
+.settings-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 150;
+  backdrop-filter: blur(6px);
+}
+.settings-overlay.hide { display: none; }
+.settings-modal {
+  background: var(--bg1);
+  border: 1px solid var(--border);
+  border-radius: var(--rl);
+  width: 480px; max-width: 95vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  animation: modalIn 0.2s ease;
+}
+.settings-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.settings-header h3 { font-size: 16px; font-weight: 700; }
+.settings-close {
+  background: none; border: none; cursor: pointer;
+  color: var(--text3); font-size: 18px; width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px; transition: color 0.1s, background 0.1s;
+}
+.settings-close:hover { color: var(--red); background: var(--surface2); }
+.settings-body { padding: 20px 24px; }
+.s-section { margin-bottom: 28px; }
+.s-section:last-child { margin-bottom: 0; }
+.s-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text3);
+  margin-bottom: 12px; display: block;
+}
+/* Theme grid */
+.theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.theme-btn {
+  padding: 10px 8px; border-radius: 10px;
+  border: 1px solid var(--border); cursor: pointer;
+  background: var(--bg2); transition: all 0.15s;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  font-family: var(--font);
+}
+.theme-btn:hover { border-color: var(--accent); background: var(--surface); }
+.theme-btn.active { border-color: var(--accent); background: var(--accent-glow); }
+.theme-swatch {
+  width: 100%; height: 28px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  gap: 4px;
+}
+.swatch-dot { width: 10px; height: 10px; border-radius: 50%; }
+.theme-name { font-size: 12px; font-weight: 600; color: var(--text2); }
+.theme-btn.active .theme-name { color: var(--accent); }
+/* Font family */
+.font-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.font-btn {
+  padding: 10px 12px; border-radius: 10px;
+  border: 1px solid var(--border); cursor: pointer;
+  background: var(--bg2); transition: all 0.15s;
+  text-align: left; font-family: inherit;
+}
+.font-btn:hover { border-color: var(--accent); background: var(--surface); }
+.font-btn.active { border-color: var(--accent); background: var(--accent-glow); }
+.font-btn-name { font-size: 13px; font-weight: 600; color: var(--text1); display: block; }
+.font-btn-preview { font-size: 11px; color: var(--text3); display: block; margin-top: 2px; }
+/* Font size slider */
+.size-row { display: flex; align-items: center; gap: 12px; }
+.size-row input[type=range] {
+  flex: 1; appearance: none; -webkit-appearance: none; height: 4px;
+  border-radius: 2px; background: var(--border); outline: none;
+  cursor: pointer;
+}
+.size-row input[type=range]::-webkit-slider-thumb {
+  appearance: none; -webkit-appearance: none; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--accent); cursor: pointer;
+  border: 2px solid var(--bg1);
+}
+.size-val {
+  min-width: 36px; text-align: center;
+  font-size: 13px; font-weight: 600; color: var(--accent);
+  font-family: var(--mono);
+}
+
+/* ═══════════════════════════════════════
+   APP
+═══════════════════════════════════════ */
+#app { display: none; width: 100%; height: 100vh; }
+#app.show { display: flex; }
+
+/* ═══════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════ */
+.sidebar {
+  width: 230px; min-width: 230px;
+  background: var(--bg1);
+  display: flex; flex-direction: column;
+  border-right: 1px solid var(--border);
+  transition: background 0.3s;
+}
+.sidebar-logo {
+  padding: 16px 14px 13px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.logo-mark-sm {
+  width: 30px; height: 30px; border-radius: 9px;
+  background: var(--accent); display: flex; align-items: center; justify-content: center;
+  color: var(--bg0); font-size: 15px; font-weight: 700; flex-shrink: 0;
+  transition: background 0.3s;
+}
+.logo-txt { font-size: 17px; font-weight: 700; letter-spacing: 0.04em; }
+.logo-txt span { color: var(--accent); transition: color 0.3s; }
+
+.sec { padding: 12px 8px 4px; }
+.sec-lbl {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text3);
+  padding: 0 6px; margin-bottom: 5px;
+}
+.ch-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; border-radius: var(--r);
+  cursor: pointer; font-size: 14px; color: var(--text2);
+  transition: background 0.1s, color 0.1s;
+  border: 1px solid transparent;
+}
+.ch-item:hover { background: var(--bg2); color: var(--text1); }
+.ch-item.active { background: var(--accent-glow); color: var(--accent); border-color: rgba(93,232,193,0.18); }
+.ch-hash { color: var(--text3); font-size: 15px; }
+.ch-item.active .ch-hash { color: var(--accent); }
+
+.users-wrap { flex: 1; overflow-y: auto; padding: 0 8px; }
+.u-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; border-radius: var(--r);
+  cursor: pointer; transition: background 0.1s;
+  position: relative;
+}
+.u-item:hover { background: var(--bg2); }
+.u-item:hover .dm-hint { opacity: 1; }
+.u-info { flex: 1; min-width: 0; }
+.u-name { font-size: 13px; font-weight: 500; color: var(--text1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.u-tag { font-size: 10px; color: var(--text3); font-family: var(--mono); }
+.dm-hint {
+  opacity: 0; font-size: 10px; color: var(--accent);
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 5px; padding: 2px 6px;
+  transition: opacity 0.12s; white-space: nowrap;
+}
+
+.av {
+  width: 32px; height: 32px; border-radius: 50%;
+  font-size: 12px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; position: relative;
+  text-transform: uppercase;
+}
+.av::after {
+  content: ''; position: absolute; bottom: 0; right: 0;
+  width: 9px; height: 9px; border-radius: 50%;
+  border: 2px solid var(--bg1);
+}
+.av.online::after { background: var(--accent); }
+.av.away::after { background: var(--amber); }
+.av.offline::after { background: var(--text3); }
+
+.ac1 { background: #1e2d4a; color: #7eb3f5; }
+.ac2 { background: #2e1e40; color: #c47ef5; }
+.ac3 { background: #1a3a2e; color: #5de8c1; }
+.ac4 { background: #3a2010; color: #f5a142; }
+.ac5 { background: #3a1525; color: #f57eb3; }
+.ac6 { background: #2c301a; color: #d4e842; }
+.ac7 { background: #1a2a3a; color: #42c4e8; }
+.ac8 { background: #301a2a; color: #e842c4; }
+.ac-me { background: var(--accent-glow); color: var(--accent); }
+
+.self-bar {
+  padding: 9px 12px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 9px;
+  background: var(--bg1);
+}
+.self-info { flex: 1; min-width: 0; }
+.self-info .u-name { font-size: 13px; }
+.self-info .u-tag { font-size: 10px; }
+.ibtn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text3); width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px; font-size: 16px;
+  transition: color 0.1s, background 0.1s;
+}
+.ibtn:hover { color: var(--accent); background: var(--surface2); }
+
+/* ═══════════════════════════════════════
+   MAIN
+═══════════════════════════════════════ */
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+.topbar {
+  height: 50px; flex-shrink: 0;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg1);
+  display: flex; align-items: center; justify-content: space-between;
+  transition: background 0.3s;
+}
+.tb-left { display: flex; align-items: center; gap: 10px; }
+.tb-name { font-size: 15px; font-weight: 600; color: var(--text1); }
+.tb-sep { width: 1px; height: 18px; background: var(--border); }
+.tb-desc { font-size: 12px; color: var(--text3); }
+.tb-right { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text3); }
+.online-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+
+.dm-tag {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 20px; padding: 3px 10px 3px 5px;
+  font-size: 13px; color: var(--text2);
+}
+.dm-tag .av { width: 22px; height: 22px; font-size: 9px; }
+.dm-tag .av::after { display: none; }
+.dm-x {
+  background: none; border: none; cursor: pointer;
+  color: var(--text3); font-size: 13px; margin-left: 4px;
+  transition: color 0.1s;
+}
+.dm-x:hover { color: var(--red); }
+
+.msgs { flex: 1; overflow-y: auto; padding: 18px 18px 8px; display: flex; flex-direction: column; gap: 2px; }
+
+.sys-msg {
+  display: flex; align-items: center; gap: 10px;
+  padding: 5px 0; font-size: 12px; color: var(--text3);
+  margin: 6px 0;
+}
+.sys-msg::before, .sys-msg::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.msg-grp { display: flex; gap: 11px; margin-top: 12px; animation: fin .16s ease; }
+.msg-grp.me { flex-direction: row-reverse; }
+.msg-con { flex: 1; min-width: 0; }
+.msg-grp.me .msg-con { display: flex; flex-direction: column; align-items: flex-end; }
+.msg-meta { display: flex; align-items: baseline; gap: 7px; margin-bottom: 3px; }
+.msg-grp.me .msg-meta { flex-direction: row-reverse; }
+.msg-auth { font-size: 14px; font-weight: 600; color: var(--text1); }
+.msg-auth.me { color: var(--accent); }
+.msg-time { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+.dm-lbl {
+  font-size: 9px; padding: 1px 5px; border-radius: 4px; font-weight: 600;
+  background: var(--accent-glow); color: var(--accent); border: 1px solid var(--msg-me-border);
+}
+.msg-bubble {
+  display: inline-block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px 12px 12px 2px;
+  padding: 8px 12px;
+  font-size: var(--font-size);
+  line-height: 1.55; color: var(--text2); word-break: break-word;
+  max-width: 72%;
+  transition: color 0.15s;
+}
+.msg-bubble:hover { color: var(--text1); }
+.msg-grp.me .msg-bubble {
+  background: var(--msg-me-bg);
+  border-color: var(--msg-me-border);
+  border-radius: 12px 12px 2px 12px;
+  color: var(--text1);
+}
+.msg-bubble.gif-bubble {
+  background: transparent; border: none; padding: 0;
+}
+.msg-bubble.gif-bubble img {
+  max-width: 220px; border-radius: 10px; display: block;
+}
+.msg-bubble.emoji-only {
+  font-size: 36px; background: transparent; border: none; padding: 4px 0; line-height: 1.2;
+}
+
+.msg-cont { padding-left: 43px; font-size: var(--font-size); line-height: 1.55; color: var(--text2); word-break: break-word; margin-top: 1px; animation: fin .16s ease; }
+.msg-cont:hover { color: var(--text1); }
+
+@keyframes fin { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:none; } }
+
+.typing-bar { height: 22px; flex-shrink: 0; padding: 0 20px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text3); }
+.tdots span { display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); animation: td 1.3s infinite; margin-right: 2px; }
+.tdots span:nth-child(2) { animation-delay: .18s; }
+.tdots span:nth-child(3) { animation-delay: .36s; }
+@keyframes td { 0%,60%,100%{opacity:.3;transform:translateY(0)} 30%{opacity:1;transform:translateY(-3px)} }
+
+/* ═══════════════════════════════════════
+   INPUT AREA
+═══════════════════════════════════════ */
+.input-area { padding: 8px 18px 16px; flex-shrink: 0; position: relative; }
+.input-toolbar {
+  display: flex; align-items: center; gap: 4px; margin-bottom: 6px;
+}
+.toolbar-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text3); height: 28px; padding: 0 8px;
+  display: flex; align-items: center; gap: 5px;
+  border-radius: 6px; font-size: 13px;
+  font-family: var(--font);
+  transition: color 0.1s, background 0.1s;
+  white-space: nowrap;
+}
+.toolbar-btn:hover { color: var(--accent); background: var(--surface2); }
+.toolbar-btn.active { color: var(--accent); background: var(--accent-glow); }
+.input-wrap {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--rl);
+  display: flex; align-items: flex-end; gap: 8px;
+  padding: 9px 11px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.input-wrap:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+textarea.ti {
+  flex: 1; background: none; border: none; outline: none;
+  resize: none; font-family: var(--font);
+  font-size: var(--font-size); color: var(--text1); line-height: 1.5;
+  max-height: 120px; overflow-y: auto;
+}
+textarea.ti::placeholder { color: var(--text3); }
+.send-btn {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--accent); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--bg0); font-size: 14px; flex-shrink: 0;
+  transition: background 0.12s, transform 0.1s;
+}
+.send-btn:hover { background: var(--accent2); }
+.send-btn:active { transform: scale(0.91); }
+
+/* ═══════════════════════════════════════
+   EMOJI / GIF PICKER
+═══════════════════════════════════════ */
+.picker-panel {
+  position: absolute; bottom: calc(100% + 6px); left: 18px;
+  width: 380px; max-width: calc(100vw - 36px);
+  background: var(--bg1); border: 1px solid var(--border);
+  border-radius: var(--rl);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  z-index: 50; display: none; overflow: hidden;
+  animation: pickerIn 0.15s ease;
+}
+.picker-panel.show { display: block; }
+@keyframes pickerIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+.picker-tabs {
+  display: flex; border-bottom: 1px solid var(--border);
+}
+.picker-tab {
+  flex: 1; padding: 10px 0; background: none; border: none;
+  cursor: pointer; font-family: var(--font); font-size: 13px;
+  color: var(--text3); transition: color 0.1s; border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.picker-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.picker-body { padding: 10px; max-height: 300px; overflow-y: auto; }
+.picker-body::-webkit-scrollbar { width: 4px; }
+.picker-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* Emoji grid */
+.emoji-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; }
+.emoji-cat { font-size: 10px; color: var(--text3); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 0 3px; grid-column: 1/-1; }
+.emoji-btn {
+  font-size: 22px; width: 36px; height: 36px; border-radius: 6px;
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.1s; line-height: 1;
+}
+.emoji-btn:hover { background: var(--surface2); }
+
+/* GIF search */
+.gif-search-wrap { margin-bottom: 8px; position: relative; }
+.gif-search {
+  width: 100%; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 12px 8px 34px;
+  font-family: var(--font); font-size: 13px; color: var(--text1); outline: none;
+  transition: border-color 0.15s;
+}
+.gif-search:focus { border-color: var(--accent); }
+.gif-search::placeholder { color: var(--text3); }
+.gif-search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 14px; pointer-events: none; }
+
+/* GIF categories */
+.gif-cats { display: flex; gap: 6px; margin-bottom: 8px; overflow-x: auto; padding-bottom: 2px; }
+.gif-cats::-webkit-scrollbar { height: 0; }
+.gif-cat-btn {
+  flex-shrink: 0; padding: 4px 10px; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--bg2);
+  color: var(--text2); font-size: 11px; font-weight: 600;
+  cursor: pointer; font-family: var(--font); transition: all 0.15s;
+  white-space: nowrap;
+}
+.gif-cat-btn:hover { border-color: var(--accent); color: var(--accent); }
+.gif-cat-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
+
+/* GIF grid — masonry-style 3 cols */
+.gif-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+.gif-item {
+  border-radius: 7px; overflow: hidden; cursor: pointer;
+  aspect-ratio: 1; background: var(--surface);
+  transition: transform 0.15s, opacity 0.15s;
+  position: relative;
+}
+.gif-item:hover { transform: scale(1.03); opacity: 0.9; }
+.gif-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gif-item-label {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 4px 6px; background: rgba(0,0,0,0.55);
+  font-size: 10px; color: #fff; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; opacity: 0;
+  transition: opacity 0.15s;
+}
+.gif-item:hover .gif-item-label { opacity: 1; }
+
+/* GIF load more */
+.gif-load-more {
+  width: 100%; margin-top: 8px; padding: 8px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text2); font-size: 12px;
+  font-family: var(--font); cursor: pointer; transition: all 0.15s;
+}
+.gif-load-more:hover { border-color: var(--accent); color: var(--accent); }
+.gif-load-more:disabled { opacity: 0.4; cursor: default; }
+
+.gif-status { text-align: center; padding: 16px; color: var(--text3); font-size: 13px; }
+.gif-status.error { color: var(--red); }
+
+/* API key banner */
+.gif-key-banner {
+  background: rgba(245,200,66,0.08); border: 1px solid rgba(245,200,66,0.25);
+  border-radius: 8px; padding: 10px 12px; margin-bottom: 8px;
+  font-size: 12px; color: var(--amber); line-height: 1.5;
+}
+.gif-key-input {
+  width: 100%; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 10px; margin-top: 6px;
+  font-family: var(--mono); font-size: 11px; color: var(--text1); outline: none;
+}
+.gif-key-input:focus { border-color: var(--accent); }
+.gif-key-btn {
+  margin-top: 5px; padding: 5px 14px; background: var(--accent);
+  border: none; border-radius: 6px; color: var(--bg0);
+  font-family: var(--font); font-size: 12px; font-weight: 700;
+  cursor: pointer; transition: background 0.12s;
+}
+.gif-key-btn:hover { background: var(--accent2); }
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div class="overlay" id="login-overlay">
+  <div class="modal">
+    <div class="modal-logo">
+      <div class="logo-mark">N</div>
+      <div><h2>NexChat</h2></div>
+    </div>
+    <p>Bir kullanıcı adı seç ve sohbete katıl.</p>
+    <input type="text" id="uname" placeholder="kullanıcı adı..." maxlength="20" autocomplete="off" spellcheck="false" />
+    <div class="modal-err" id="join-err"></div>
+    <button class="modal-btn" id="join-btn" onclick="doJoin()">Katıl →</button>
+    <div class="modal-conn" id="conn-status"><span class="dot-pulse"></span> sunucuya bağlanıyor...</div>
+  </div>
+</div>
+
+<!-- ══ SETTINGS ══ -->
+<div class="settings-overlay hide" id="settings-overlay">
+  <div class="settings-modal">
+    <div class="settings-header">
+      <h3>⚙️ Ayarlar</h3>
+      <button class="settings-close" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="settings-body">
+
+      <!-- THEMES -->
+      <div class="s-section">
+        <span class="s-label">Tema</span>
+        <div class="theme-grid">
+          <button class="theme-btn active" onclick="setTheme('cyber',this)">
+            <div class="theme-swatch" style="background:#13161e;">
+              <div class="swatch-dot" style="background:#5de8c1;"></div>
+              <div class="swatch-dot" style="background:#1a1e28;"></div>
+              <div class="swatch-dot" style="background:#2e354a;"></div>
+            </div>
+            <span class="theme-name">Cyber</span>
+          </button>
+          <button class="theme-btn" onclick="setTheme('midnight',this)">
+            <div class="theme-swatch" style="background:#0e1525;">
+              <div class="swatch-dot" style="background:#7b8cff;"></div>
+              <div class="swatch-dot" style="background:#141d32;"></div>
+              <div class="swatch-dot" style="background:#263050;"></div>
+            </div>
+            <span class="theme-name">Midnight</span>
+          </button>
+          <button class="theme-btn" onclick="setTheme('rose',this)">
+            <div class="theme-swatch" style="background:#1e1020;">
+              <div class="swatch-dot" style="background:#f472b6;"></div>
+              <div class="swatch-dot" style="background:#2a162c;"></div>
+              <div class="swatch-dot" style="background:#4a2855;"></div>
+            </div>
+            <span class="theme-name">Rose</span>
+          </button>
+          <button class="theme-btn" onclick="setTheme('amber',this)">
+            <div class="theme-swatch" style="background:#1a1500;">
+              <div class="swatch-dot" style="background:#f5c842;"></div>
+              <div class="swatch-dot" style="background:#231c00;"></div>
+              <div class="swatch-dot" style="background:#4a3a00;"></div>
+            </div>
+            <span class="theme-name">Amber</span>
+          </button>
+          <button class="theme-btn" onclick="setTheme('forest',this)">
+            <div class="theme-swatch" style="background:#0b1610;">
+              <div class="swatch-dot" style="background:#4ade80;"></div>
+              <div class="swatch-dot" style="background:#101f17;"></div>
+              <div class="swatch-dot" style="background:#243d2e;"></div>
+            </div>
+            <span class="theme-name">Forest</span>
+          </button>
+          <button class="theme-btn" onclick="setTheme('light',this)">
+            <div class="theme-swatch" style="background:#ffffff;">
+              <div class="swatch-dot" style="background:#5a4fcf;"></div>
+              <div class="swatch-dot" style="background:#f5f7fc;"></div>
+              <div class="swatch-dot" style="background:#d0d6e8;"></div>
+            </div>
+            <span class="theme-name" style="color:#5a627a;">Light</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- FONT FAMILY -->
+      <div class="s-section">
+        <span class="s-label">Yazı Tipi</span>
+        <div class="font-grid">
+          <button class="font-btn active" style="font-family:'Syne',sans-serif;" onclick="setFont('Syne',this)">
+            <span class="font-btn-name">Syne</span>
+            <span class="font-btn-preview" style="font-family:'Syne',sans-serif;">Merhaba Dünya</span>
+          </button>
+          <button class="font-btn" style="font-family:'Inter',sans-serif;" onclick="setFont('Inter',this)">
+            <span class="font-btn-name">Inter</span>
+            <span class="font-btn-preview" style="font-family:'Inter',sans-serif;">Merhaba Dünya</span>
+          </button>
+          <button class="font-btn" onclick="setFont('Poppins',this)">
+            <span class="font-btn-name">Poppins</span>
+            <span class="font-btn-preview" style="font-family:'Poppins',sans-serif;">Merhaba Dünya</span>
+          </button>
+          <button class="font-btn" onclick="setFont('Nunito',this)">
+            <span class="font-btn-name">Nunito</span>
+            <span class="font-btn-preview" style="font-family:'Nunito',sans-serif;">Merhaba Dünya</span>
+          </button>
+          <button class="font-btn" onclick="setFont('Raleway',this)">
+            <span class="font-btn-name">Raleway</span>
+            <span class="font-btn-preview" style="font-family:'Raleway',sans-serif;">Merhaba Dünya</span>
+          </button>
+          <button class="font-btn" onclick="setFont('JetBrains Mono',this)">
+            <span class="font-btn-name">Mono</span>
+            <span class="font-btn-preview" style="font-family:'JetBrains Mono',monospace;">Merhaba Dünya</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- FONT SIZE -->
+      <div class="s-section">
+        <span class="s-label">Yazı Boyutu</span>
+        <div class="size-row">
+          <span style="font-size:11px;color:var(--text3);">A</span>
+          <input type="range" min="11" max="20" value="14" id="font-size-slider" oninput="setFontSize(this.value)" />
+          <span style="font-size:18px;color:var(--text3);">A</span>
+          <span class="size-val" id="font-size-val">14px</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="app">
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark-sm">N</div>
+      <div class="logo-txt">Nex<span>Chat</span></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-lbl">Kanallar</div>
+      <div class="ch-item active" id="ch-btn" onclick="switchToChannel()">
+        <span class="ch-hash">#</span> genel
+      </div>
+    </div>
+
+    <div class="sec" style="flex:1;display:flex;flex-direction:column;overflow:hidden;padding-bottom:0;">
+      <div class="sec-lbl">Çevrimiçi — <span id="online-lbl">0</span></div>
+      <div class="users-wrap" id="user-list"></div>
+    </div>
+
+    <div class="self-bar">
+      <div class="av ac-me online" id="self-av" style="width:30px;height:30px;font-size:11px;">?</div>
+      <div class="self-info">
+        <div class="u-name" id="self-n">—</div>
+        <div class="u-tag" id="self-t">#0000</div>
+      </div>
+      <button class="ibtn" title="Ayarlar" onclick="openSettings()">⚙️</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar" id="topbar">
+      <div class="tb-left">
+        <span style="color:var(--text3);font-size:16px;">#</span>
+        <span class="tb-name">genel</span>
+        <div class="tb-sep"></div>
+        <span class="tb-desc">Herkese açık kanal</span>
+      </div>
+      <div class="tb-right">
+        <div class="online-dot"></div>
+        <span id="online-top">0 çevrimiçi</span>
+      </div>
+    </div>
+
+    <div class="msgs" id="msgs"></div>
+
+    <div class="typing-bar" id="typing-bar" style="visibility:hidden;">
+      <div class="tdots"><span></span><span></span><span></span></div>
+      <span id="typing-txt"></span>
+    </div>
+
+    <div class="input-area" id="input-area">
+      <!-- Toolbar -->
+      <div class="input-toolbar">
+        <button class="toolbar-btn" id="emoji-btn" onclick="togglePicker('emoji')">😀 Emoji</button>
+        <button class="toolbar-btn" id="gif-btn" onclick="togglePicker('gif')">🎞️ GIF</button>
+      </div>
+
+      <!-- Picker panel -->
+      <div class="picker-panel" id="picker-panel">
+        <div class="picker-tabs">
+          <button class="picker-tab active" id="tab-emoji" onclick="switchPickerTab('emoji')">😀 Emoji</button>
+          <button class="picker-tab" id="tab-gif" onclick="switchPickerTab('gif')">🎞️ GIF</button>
+        </div>
+        <div class="picker-body" id="picker-body">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <div class="input-wrap">
+        <textarea class="ti" id="ti" placeholder="#genel kanalına yaz..." rows="1"
+          onkeydown="handleKey(event)" oninput="autoH(this);onType();"></textarea>
+        <button class="send-btn" onclick="sendMsg()" title="Gönder">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════
+   STATE
+══════════════════════════════ */
+let ws = null;
+let me = null;
+let users = {};
+let activeDm = null;
+let lastAuthor = null;
+let typingTimer = null;
+let typingUsers = {};
+let currentPickerTab = 'emoji';
+let gifSearchTimer = null;
+let currentTheme = 'cyber';
+
+/* ══════════════════════════════
+   SETTINGS
+══════════════════════════════ */
+function openSettings() {
+  document.getElementById('settings-overlay').classList.remove('hide');
+  document.getElementById('picker-panel').classList.remove('show');
+}
+function closeSettings() {
+  document.getElementById('settings-overlay').classList.add('hide');
+}
+document.getElementById('settings-overlay').addEventListener('click', function(e){
+  if(e.target === this) closeSettings();
+});
+
+function setTheme(theme, btn) {
+  document.documentElement.setAttribute('data-theme', theme);
+  currentTheme = theme;
+  document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setFont(fontName, btn) {
+  const val = `'${fontName}', ${fontName === 'JetBrains Mono' ? 'monospace' : 'sans-serif'}`;
+  document.documentElement.style.setProperty('--font', val);
+  document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setFontSize(val) {
+  document.documentElement.style.setProperty('--font-size', val + 'px');
+  document.getElementById('font-size-val').textContent = val + 'px';
+}
+
+/* ══════════════════════════════
+   EMOJI DATA
+══════════════════════════════ */
+const EMOJI_CATS = [
+  { name: 'Sık Kullanılan', emojis: ['😀','😂','🥰','😍','🤩','😎','🥳','😭','😤','🤔','👍','❤️','🔥','✨','🎉','💯'] },
+  { name: 'Yüzler', emojis: ['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥸','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🫠','🤭','🤫','🤥','😶','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤧','😷','🤒','🤕'] },
+  { name: 'El & Beden', emojis: ['👋','🤚','🖐️','✋','🖖','👌','🤌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','💪','🦵','🦶','👂','🦷','👃','🫀','🫁','🧠','👣','👀','👁️','👅'] },
+  { name: 'Hayvanlar', emojis: ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🐔','🐧','🐦','🦅','🦆','🦋','🐝','🐛','🐌','🐞','🐜','🦗','🐢','🐍','🦎','🦖','🦕','🐙','🦑','🦐','🦀','🐡','🐟','🐬','🐳','🦈','🐊','🐅','🐆','🦓','🦍','🦧','🐘','🦛','🦏','🐪','🦒','🦘','🦬','🐃','🐂','🦙','🐏','🐑','🐐','🦌','🐕','🐩','🦮','🐈','🐈‍⬛','🪶','🐓','🦃','🕊️','🐇','🦝','🦨','🦡','🦦','🦥','🐁','🐀','🐿️','🦔'] },
+  { name: 'Yiyecek', emojis: ['🍎','🍊','🍋','🍇','🍓','🫐','🍈','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🫒','🥑','🍆','🥦','🥕','🌽','🌶️','🥒','🧄','🧅','🥔','🍠','🧇','🥞','🧆','🧈','🍳','🥚','🧀','🥗','🥙','🌮','🌯','🫔','🥣','🫕','🍜','🍝','🍛','🍲','🍱','🍣','🍤','🍙','🍘','🍥','🥮','🍡','🧁','🎂','🍰','🍮','🍭','🍬','🍫','🍿','🍩','🍪','🌰','🥜','🍯','🍞','🥐','🥖','🫓','🧁','🍕'] },
+  { name: 'Semboller', emojis: ['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞','💓','💗','💖','💘','💝','❤️‍🔥','💟','☮️','✝️','☯️','⭐','🌟','✨','💫','⚡','🔥','🌈','☀️','🌙','⛅','🌊','💧','🍀','🌺','🌸','🌹','🌻','💐','🎵','🎶','🎯','🏆','🎪','🎨','🎭','🎬','🎤','🎧','📱','💻','⌨️','🖥️','🖨️','🖱️','💾','💿','📀','📡','🔋','🔌','💡','🔦','🕯️','💰','💸','💳','🎁','📦','📫','📮','📬','📭','📪','🗂️','📁','📂','📌','📍','✏️','✒️','🖊️','🖋️','📝','💼','📓','📔','📒','📕','📗','📘','📙','📚','📖'] },
+  { name: 'Aktivite', emojis: ['⚽','🏀','🏈','⚾','🥎','🎾','🏐','🏉','🥏','🎱','🏓','🏸','🏒','🥍','🏑','🏏','🪃','🥅','⛳','🪁','🛝','🏹','🎣','🤿','🥊','🥋','🎽','🛹','🛷','⛸️','🤸','🤼','🤺','🏇','⛷️','🏂','🏋️','🤾','🏌️','🏄','🚣','🧗','🚵','🚴','🏆','🥇','🥈','🥉','🏅','🎖️','🎪','🤹','🎭','🎨','🎬','🎤','🎼','🎻','🥁','🎷','🎺','🎸','🎹'] },
+];
+
+function renderEmojiPicker() {
+  let html = '<div class="emoji-grid">';
+  EMOJI_CATS.forEach(cat => {
+    html += `<div class="emoji-cat">${cat.name}</div>`;
+    cat.emojis.forEach(em => {
+      html += `<button class="emoji-btn" onclick="insertEmoji('${em}')" title="${em}">${em}</button>`;
+    });
+  });
+  html += '</div>';
+  return html;
+}
+
+function insertEmoji(em) {
+  const ti = document.getElementById('ti');
+  const pos = ti.selectionStart;
+  const val = ti.value;
+  ti.value = val.slice(0, pos) + em + val.slice(pos);
+  ti.focus();
+  ti.selectionStart = ti.selectionEnd = pos + em.length;
+  autoH(ti);
+}
+
+/* ══════════════════════════════
+   GIF PICKER — GIPHY API
+══════════════════════════════ */
+
+// ── Buraya kendi Giphy API key'ini yapıştır ──
+let GIPHY_KEY = localStorage.getItem('nexchat_giphy_key') || 'FXX5YpmiIA3Hi49u4U1og5GctcrcyFwE';
+
+const GIF_LIMIT = 24; // her yüklemede kaç GIF
+const GIF_CATS = ['Trending','😂 Komik','😭 Üzgün','🎉 Kutlama','❤️ Aşk','🐱 Hayvan','🔥 Harika','🤔 Hmm','👏 Alkış','😤 Sinir','🥳 Parti','🌊 Sakin'];
+
+let gifState = {
+  query: '',
+  category: 'Trending',
+  offset: 0,
+  total: 0,
+  loading: false,
+  results: [],
+};
+
+function hasGiphyKey() {
+  return GIPHY_KEY && GIPHY_KEY !== 'BURAYA_KEY_GEL' && GIPHY_KEY.length > 10;
+}
+
+function saveGiphyKey(key) {
+  GIPHY_KEY = key.trim();
+  localStorage.setItem('nexchat_giphy_key', GIPHY_KEY);
+  gifState = { query: '', category: 'Trending', offset: 0, total: 0, loading: false, results: [] };
+  renderGifPickerUI();
+  loadGifs();
+}
+
+function renderGifPickerUI() {
+  const body = document.getElementById('picker-body');
+  if (!body) return;
+
+  if (!hasGiphyKey()) {
+    body.innerHTML = `
+      <div class="gif-key-banner">
+        ⚠️ Sınırsız GIF için ücretsiz Giphy API key'i gir.<br>
+        <small style="opacity:.7;">developers.giphy.com → Create App → API</small>
+        <input class="gif-key-input" id="giphy-key-inp" placeholder="API key yapıştır..." />
+        <br><button class="gif-key-btn" onclick="saveGiphyKey(document.getElementById('giphy-key-inp').value)">Kaydet & Yükle</button>
+      </div>
+    `;
+    return;
+  }
+
+  const catHtml = GIF_CATS.map(c => {
+    const active = gifState.category === c && !gifState.query;
+    return `<button class="gif-cat-btn${active?' active':''}" onclick="selectGifCat('${c}')">${c}</button>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="gif-search-wrap">
+      <span class="gif-search-icon">🔍</span>
+      <input class="gif-search" id="gif-search-input" placeholder="GIF ara... (10.000+)" value="${esc(gifState.query)}" oninput="onGifSearch(this.value)" />
+    </div>
+    <div class="gif-cats" id="gif-cats">${catHtml}</div>
+    <div class="gif-grid" id="gif-grid">${gifState.results.map(gifItemHtml).join('')}</div>
+    ${gifState.results.length > 0 && gifState.results.length < gifState.total
+      ? `<button class="gif-load-more" id="gif-load-more" onclick="loadMoreGifs()">
+           ${gifState.loading ? 'Yükleniyor...' : `Daha fazla göster (${gifState.total - gifState.results.length} kaldı)`}
+         </button>`
+      : ''}
+    ${gifState.loading && gifState.results.length === 0 ? '<div class="gif-status">GIF\'ler yükleniyor...</div>' : ''}
+    ${!gifState.loading && gifState.results.length === 0 ? '<div class="gif-status">Sonuç bulunamadı 😕</div>' : ''}
+  `;
+}
+
+function gifItemHtml(g) {
+  const preview = g.images?.fixed_width_small?.url || g.images?.downsized_small?.url || g.images?.preview_gif?.url || '';
+  const full = g.images?.original?.url || g.images?.downsized?.url || '';
+  const safeUrl = full.replace(/'/g, '%27');
+  return `
+    <div class="gif-item" onclick="sendGif('${safeUrl}')" title="${esc(g.title || '')}">
+      <img src="${preview}" alt="${esc(g.title || 'GIF')}" loading="lazy" />
+      <div class="gif-item-label">${esc(g.title || '')}</div>
+    </div>`;
+}
+
+function onGifSearch(val) {
+  clearTimeout(gifSearchTimer);
+  gifState.query = val;
+  gifState.offset = 0;
+  gifState.results = [];
+  gifSearchTimer = setTimeout(() => loadGifs(), 380);
+}
+
+function selectGifCat(cat) {
+  gifState.category = cat;
+  gifState.query = '';
+  gifState.offset = 0;
+  gifState.results = [];
+  const inp = document.getElementById('gif-search-input');
+  if (inp) inp.value = '';
+  renderGifPickerUI();
+  loadGifs();
+}
+
+async function loadGifs(append = false) {
+  if (!hasGiphyKey() || gifState.loading) return;
+  gifState.loading = true;
+  if (!append) { gifState.results = []; gifState.offset = 0; }
+  renderGifPickerUI();
+
+  try {
+    let url;
+    const base = 'https://api.giphy.com/v1/gifs';
+    const common = `api_key=${encodeURIComponent(GIPHY_KEY)}&limit=${GIF_LIMIT}&offset=${gifState.offset}&rating=g&lang=tr`;
+
+    if (gifState.query.trim()) {
+      url = `${base}/search?${common}&q=${encodeURIComponent(gifState.query)}`;
+    } else if (gifState.category === 'Trending') {
+      url = `${base}/trending?${common}`;
+    } else {
+      const catQuery = gifState.category.replace(/^[^\s]+\s/, ''); // strip emoji prefix
+      url = `${base}/search?${common}&q=${encodeURIComponent(catQuery)}`;
+    }
+
+    const res = await fetch(url);
+    const json = await res.json();
+
+    if (json.meta?.status !== 200 && json.meta?.status !== undefined) {
+      throw new Error(json.meta?.msg || 'API hatası');
+    }
+
+    const items = json.data || [];
+    gifState.results = append ? [...gifState.results, ...items] : items;
+    gifState.total = json.pagination?.total_count || items.length;
+    gifState.offset += items.length;
+
+    if (json.meta?.status === 403 || json.meta?.msg?.includes('Invalid')) {
+      GIPHY_KEY = 'BURAYA_KEY_GEL';
+      localStorage.removeItem('nexchat_giphy_key');
+    }
+  } catch(err) {
+    console.error('Giphy error:', err);
+  }
+
+  gifState.loading = false;
+  renderGifPickerUI();
+}
+
+function loadMoreGifs() {
+  loadGifs(true);
+}
+
+function sendGif(url) {
+  closePicker();
+  if (activeDm) {
+    send({ type: 'dm', to: activeDm, text: '', gif: url });
+  } else {
+    send({ type: 'channel_msg', text: '', gif: url });
+  }
+}
+
+/* ══════════════════════════════
+   PICKER PANEL
+══════════════════════════════ */
+function togglePicker(tab) {
+  const panel = document.getElementById('picker-panel');
+  if (panel.classList.contains('show') && currentPickerTab === tab) {
+    panel.classList.remove('show');
+    return;
+  }
+  panel.classList.add('show');
+  switchPickerTab(tab);
+}
+
+function switchPickerTab(tab) {
+  currentPickerTab = tab;
+  document.getElementById('tab-emoji').classList.toggle('active', tab === 'emoji');
+  document.getElementById('tab-gif').classList.toggle('active', tab === 'gif');
+  document.getElementById('emoji-btn').classList.toggle('active', tab === 'emoji' && document.getElementById('picker-panel').classList.contains('show'));
+  document.getElementById('gif-btn').classList.toggle('active', tab === 'gif' && document.getElementById('picker-panel').classList.contains('show'));
+  const body = document.getElementById('picker-body');
+  if (tab === 'emoji') {
+    body.innerHTML = renderEmojiPicker();
+  } else {
+    // GIF tab: render UI then load if needed
+    renderGifPickerUI();
+    if (hasGiphyKey() && gifState.results.length === 0 && !gifState.loading) {
+      loadGifs();
+    }
+  }
+}
+
+function closePicker() {
+  document.getElementById('picker-panel').classList.remove('show');
+  document.getElementById('emoji-btn').classList.remove('active');
+  document.getElementById('gif-btn').classList.remove('active');
+}
+
+// Close picker on outside click
+document.addEventListener('click', function(e) {
+  const panel = document.getElementById('picker-panel');
+  const area = document.getElementById('input-area');
+  if (!area.contains(e.target)) closePicker();
+});
+
+/* ══════════════════════════════
+   WS
+══════════════════════════════ */
+function connect() {
+  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+  ws = new WebSocket(`${proto}://${location.host}`);
+
+  ws.onopen = () => {
+    document.getElementById('conn-status').textContent = '✓ Bağlandı';
+    document.getElementById('join-btn').disabled = false;
+    document.getElementById('uname').disabled = false;
+  };
+  ws.onclose = () => {
+    document.getElementById('conn-status').innerHTML = '<span style="color:var(--red)">Bağlantı kesildi — yenile</span>';
+  };
+  ws.onerror = () => {
+    document.getElementById('conn-status').innerHTML = '<span style="color:var(--red)">Sunucuya bağlanılamadı</span>';
+  };
+  ws.onmessage = (e) => {
+    let d; try { d = JSON.parse(e.data); } catch { return; }
+    handle(d);
+  };
+}
+
+function sendWs(obj) {
+  if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj));
+}
+// alias
+function send(obj) { sendWs(obj); }
+
+function handle(d) {
+  if (d.type === 'error') {
+    document.getElementById('join-err').textContent = d.msg;
+    document.getElementById('join-btn').disabled = false;
+    return;
+  }
+  if (d.type === 'welcome') {
+    me = d.user;
+    document.getElementById('login-overlay').classList.add('hide');
+    document.getElementById('app').classList.add('show');
+    document.getElementById('self-av').textContent = ini(me.name);
+    document.getElementById('self-n').textContent = me.name;
+    document.getElementById('self-t').textContent = me.tag;
+    d.history.forEach(m => renderMsg(m));
+    scrollBottom();
+    return;
+  }
+  if (d.type === 'user_list') {
+    users = {};
+    d.users.forEach(u => { if (u.id !== me.id) users[u.id] = u; });
+    renderUsers(); return;
+  }
+  if (d.type === 'user_joined') {
+    if (d.user.id !== me.id) users[d.user.id] = d.user;
+    renderUsers(); return;
+  }
+  if (d.type === 'user_left') {
+    delete users[d.id];
+    if (activeDm === d.id) closeDm();
+    renderUsers(); return;
+  }
+  if (d.type === 'channel_msg') {
+    if (activeDm) return;
+    renderMsg(d); scrollBottom(); return;
+  }
+  if (d.type === 'history_reload') {
+    const area = document.getElementById('msgs');
+    area.innerHTML = ''; lastAuthor = null;
+    d.messages.forEach(m => renderMsg(m));
+    scrollBottom(); return;
+  }
+  if (d.type === 'dm') {
+    const other = d.from.id === me.id ? d.to : d.from.id;
+    if (activeDm === other) { renderMsg(d); scrollBottom(); }
+    else if (d.from.id !== me.id) flashUser(d.from.id);
+    return;
+  }
+  if (d.type === 'dm_history') {
+    const area = document.getElementById('msgs');
+    area.innerHTML = ''; lastAuthor = null;
+    addSysMsg(`${users[d.with]?.name || '?'} ile özel konuşma`);
+    d.messages.forEach(m => renderMsg(m));
+    scrollBottom(); return;
+  }
+  if (d.type === 'typing') {
+    if (d.channel === 'dm') { if (d.from !== me.id && activeDm === d.from) showTyping(d.name); }
+    else { if (d.from !== me.id && !activeDm) showTyping(d.name); }
+    return;
+  }
+}
+
+/* ══════════════════════════════
+   JOIN
+══════════════════════════════ */
+document.getElementById('join-btn').disabled = true;
+document.getElementById('uname').disabled = true;
+document.getElementById('uname').addEventListener('keydown', e => { if (e.key === 'Enter') doJoin(); });
+
+function doJoin() {
+  const name = document.getElementById('uname').value.trim();
+  const err = document.getElementById('join-err');
+  if (!name) { err.textContent = 'Kullanıcı adı boş olamaz.'; return; }
+  if (name.length < 2) { err.textContent = 'En az 2 karakter.'; return; }
+  err.textContent = '';
+  document.getElementById('join-btn').disabled = true;
+  send({ type: 'join', name });
+}
+
+/* ══════════════════════════════
+   RENDER USERS
+══════════════════════════════ */
+function renderUsers() {
+  const list = document.getElementById('user-list');
+  const arr = Object.values(users);
+  document.getElementById('online-lbl').textContent = arr.length + 1;
+  document.getElementById('online-top').textContent = (arr.length + 1) + ' çevrimiçi';
+  if (arr.length === 0) {
+    list.innerHTML = `<div style="font-size:12px;color:var(--text3);padding:8px;">henüz kimse yok</div>`;
+    return;
+  }
+  list.innerHTML = arr.map(u => `
+    <div class="u-item" onclick="openDm('${u.id}')" id="ui-${u.id}">
+      <div class="av ${u.av} online" style="width:28px;height:28px;font-size:11px;">${ini(u.name)}</div>
+      <div class="u-info">
+        <div class="u-name">${esc(u.name)}</div>
+        <div class="u-tag">${u.tag}</div>
+      </div>
+      <div class="dm-hint">DM</div>
+    </div>
+  `).join('');
+}
+
+function flashUser(uid) {
+  const el = document.getElementById('ui-' + uid);
+  if (!el) return;
+  el.style.background = 'var(--accent-glow)';
+  setTimeout(() => { el.style.background = ''; }, 1500);
+}
+
+/* ══════════════════════════════
+   RENDER MSG
+══════════════════════════════ */
+function isOnlyEmoji(str) {
+  if (!str) return false;
+  const emojiReg = /^(\p{Emoji_Presentation}|\p{Extended_Pictographic}|\uFE0F|\u200D)+$/u;
+  return emojiReg.test(str.trim()) && str.trim().length <= 8;
+}
+
+function renderMsg(d) {
+  if (d.system) { addSysMsg(d.text); lastAuthor = null; return; }
+  const area = document.getElementById('msgs');
+  const isMe = d.from.id === me.id;
+  const same = lastAuthor === d.from.id;
+  lastAuthor = d.from.id;
+
+  const meClass = isMe ? ' me' : '';
+
+  if (same && !d.gif) {
+    const div = document.createElement('div');
+    div.className = 'msg-cont';
+    const bubbleClass = isOnlyEmoji(d.text) ? 'emoji-only' : '';
+    div.innerHTML = `<span class="msg-bubble ${bubbleClass}">${esc(d.text)}</span>`;
+    if (isMe) div.style.textAlign = 'right';
+    area.appendChild(div);
+  } else {
+    const div = document.createElement('div');
+    div.className = `msg-grp${meClass}`;
+
+    let contentHtml = '';
+    if (d.gif) {
+      contentHtml = `<span class="msg-bubble gif-bubble"><img src="${esc(d.gif)}" alt="GIF" /></span>`;
+      if (d.text) contentHtml += `<br><span class="msg-bubble">${esc(d.text)}</span>`;
+    } else {
+      const bubbleClass = isOnlyEmoji(d.text) ? 'emoji-only' : '';
+      contentHtml = `<span class="msg-bubble ${bubbleClass}">${esc(d.text)}</span>`;
+    }
+
+    div.innerHTML = `
+      <div class="av ${isMe ? 'ac-me' : d.from.av} online" style="width:34px;height:34px;font-size:13px;flex-shrink:0;">${ini(d.from.name)}</div>
+      <div class="msg-con">
+        <div class="msg-meta">
+          <span class="msg-auth${meClass}">${esc(d.from.name)}</span>
+          ${d.type === 'dm' ? '<span class="dm-lbl">DM</span>' : ''}
+          <span class="msg-time">${d.time}</span>
+        </div>
+        ${contentHtml}
+      </div>
+    `;
+    area.appendChild(div);
+  }
+}
+
+function addSysMsg(txt) {
+  const area = document.getElementById('msgs');
+  const d = document.createElement('div');
+  d.className = 'sys-msg';
+  d.textContent = txt;
+  area.appendChild(d);
+  lastAuthor = null;
+}
+
+/* ══════════════════════════════
+   SEND
+══════════════════════════════ */
+function sendMsg() {
+  const ti = document.getElementById('ti');
+  const text = ti.value.trim();
+  if (!text) return;
+  ti.value = ''; ti.style.height = 'auto';
+  closePicker();
+  if (activeDm) {
+    send({ type: 'dm', to: activeDm, text });
+  } else {
+    send({ type: 'channel_msg', text });
+  }
+}
+
+/* ══════════════════════════════
+   DM
+══════════════════════════════ */
+function openDm(uid) {
+  const u = users[uid];
+  if (!u) return;
+  activeDm = uid; lastAuthor = null;
+  document.getElementById('topbar').innerHTML = `
+    <div class="tb-left">
+      <span style="color:var(--accent);font-size:14px;">✉</span>
+      <span class="tb-name">Özel Mesaj</span>
+      <div class="tb-sep"></div>
+      <div class="dm-tag">
+        <div class="av ${u.av} online" style="width:22px;height:22px;font-size:9px;">${ini(u.name)}</div>
+        ${esc(u.name)}
+        <button class="dm-x" onclick="closeDm()">✕</button>
+      </div>
+    </div>
+    <div class="tb-right"><div class="online-dot"></div><span>çevrimiçi</span></div>
+  `;
+  document.getElementById('ti').placeholder = `${u.name} kullanıcısına yaz...`;
+  document.getElementById('msgs').innerHTML = '';
+  send({ type: 'dm_history', with: uid });
+}
+
+function closeDm() {
+  activeDm = null; lastAuthor = null;
+  document.getElementById('topbar').innerHTML = `
+    <div class="tb-left">
+      <span style="color:var(--text3);font-size:16px;">#</span>
+      <span class="tb-name">genel</span>
+      <div class="tb-sep"></div>
+      <span class="tb-desc">Herkese açık kanal</span>
+    </div>
+    <div class="tb-right">
+      <div class="online-dot"></div>
+      <span id="online-top">${Object.keys(users).length + 1} çevrimiçi</span>
+    </div>
+  `;
+  document.getElementById('ti').placeholder = '#genel kanalına yaz...';
+  document.getElementById('msgs').innerHTML = '';
+  send({ type: 'get_history' });
+}
+
+function switchToChannel() { if (activeDm) closeDm(); }
+
+/* ══════════════════════════════
+   TYPING
+══════════════════════════════ */
+function onType() {
+  clearTimeout(typingTimer);
+  if (activeDm) send({ type: 'typing', channel: 'dm', to: activeDm });
+  else send({ type: 'typing', channel: 'general' });
+  typingTimer = setTimeout(() => {}, 2000);
+}
+
+function showTyping(name) {
+  const bar = document.getElementById('typing-bar');
+  document.getElementById('typing-txt').textContent = name + ' yazıyor...';
+  bar.style.visibility = 'visible';
+  clearTimeout(typingUsers[name]);
+  typingUsers[name] = setTimeout(() => { bar.style.visibility = 'hidden'; }, 2500);
+}
+
+/* ══════════════════════════════
+   UTILS
+══════════════════════════════ */
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+}
+function autoH(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+function scrollBottom() {
+  const a = document.getElementById('msgs');
+  a.scrollTop = a.scrollHeight;
+}
+function ini(n) { return (n || '?').slice(0, 2).toUpperCase(); }
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+connect();
+</script>
+</body>
+</html>
